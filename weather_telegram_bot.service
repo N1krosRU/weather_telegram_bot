@@ -1,0 +1,13 @@
+[Unit]
+Description=weather_telegram_bot
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/home/n1kros/python_project/weather_telegram_bot/venv/bin/python /home/n1kros/python_project/weather_telegram_bot/bot.py
+KillMode=process
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
