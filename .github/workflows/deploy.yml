@@ -1,0 +1,14 @@
+name: Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deployment:
+    runs-on: ubuntu-latest
+    steps:
+      # Setup
+      - run: echo ${{ secrets.SSH_KEY}}
+      # Deploy
