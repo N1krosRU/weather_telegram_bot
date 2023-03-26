@@ -11,5 +11,4 @@ jobs:
     steps:
       # Setup
       - run: echo ${{ secrets.SSH_KEY}}
-      - run: echo ${{ secrets.SSH_KEY}}
       # Deploy
