@@ -12,5 +12,5 @@ jobs:
       # Setup
       - run: echo ${{ secrets.SSH_KEY}}
       - run: echo Hello World!
-      - run: cat requirements.txt
+      - run: whereis requirements.txt
       # Deploy
