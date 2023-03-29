@@ -11,6 +11,7 @@ jobs:
       - name: Checkout code
       - uses: actions/checkout@v3
       - name: Copy files on remote server
+      - run: ls
       - run: ls -a
       - run: cd ..
       - run: ls -a
