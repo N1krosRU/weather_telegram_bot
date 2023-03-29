@@ -13,6 +13,6 @@ jobs:
     - name: Copy project
       run: |
         ls
-        
         ls -a
         pwd
+        scp -r /home/runner/work/weather_telegram_bot/ ${{secrets.SSH_USER}}@${{secrets.SSH_HOST}}:${{secrets.PATH_TO_PROJECT}}
