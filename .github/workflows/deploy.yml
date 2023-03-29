@@ -13,5 +13,6 @@ jobs:
     - name: Copy project
       run: |
         ls
+        
         ls -a
         pwd
