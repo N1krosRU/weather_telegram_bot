@@ -1,14 +1,11 @@
-# This workflow will copy project on remote server.
-
-name: "Deploy Telegram Bot"
+name: Deployment
 on:
   push:
-    branches: ["main"]
-  pull_request:
-    branches: ["main"]
+    branches:
+      - main
 
 jobs:
-  lint:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
