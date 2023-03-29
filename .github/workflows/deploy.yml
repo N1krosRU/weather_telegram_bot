@@ -15,4 +15,4 @@ jobs:
         ls
         ls -a
         pwd
-        scp -r /home/runner/work/weather_telegram_bot/ ${{secrets.SSH_USER}}@${{secrets.SSH_HOST}}:${{secrets.PATH_TO_PROJECT}}
+        scp -r -o StrictHostKeyChecking=no /home/runner/work/weather_telegram_bot/ ${{secrets.SSH_USER}}@${{secrets.SSH_HOST}}:${{secrets.PATH_TO_PROJECT}}
