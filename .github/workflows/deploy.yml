@@ -15,4 +15,14 @@ jobs:
         ls
         ls -a
         pwd
-        scp -r -o StrictHostKeyChecking=no /home/runner/work/weather_telegram_bot/ ${{secrets.SSH_USER}}@${{secrets.SSH_HOST}}:${{secrets.PATH_TO_PROJECT}}
+        mkdir -p ~/.ssh/
+        echo "${{secrets.SSH_PRIVATE_KEY}}" > ~/.ssh/staging.key
+        chmod 600 ~/.ssh/staging.key
+        cat >>~/.ssh/config <<END
+        Host srvar
+          HostName ${{secrets.SSH_HOST}}
+          User ${{secrets.SSH_USER}}
+          IdentityFile ~/.ssh/staging.key
+          StrictHostKeyChecking no
+        END
+        scp -r /home/runner/work/weather_telegram_bot/ srvar:${{secrets.PATH_TO_PROJECT}}
