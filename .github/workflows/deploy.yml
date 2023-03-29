@@ -25,4 +25,4 @@ jobs:
           IdentityFile ~/.ssh/staging.key
           StrictHostKeyChecking no
         END
-        scp -r /home/runner/work/weather_telegram_bot/ srvar:${{secrets.PATH_TO_PROJECT}}
+        scp -r /home/runner/work/weather_telegram_bot/weather_telegram_bot srvar:${{secrets.PATH_TO_PROJECT}}
