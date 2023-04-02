@@ -6,15 +6,17 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest # Используем Виртуальную машину (Ubuntu последней версии)
     steps:
-    - name: Checkout project
+    - name: Checkout project # Извлекаем репозиторий на виртуальную машину
       uses: actions/checkout@v3
-    - name: Copy project
+    - name: Create SSH files 1  # Подготавливаем SSH файлы (создаём приватный ключ ssh)
       run: |
         mkdir -p ~/.ssh/
         echo "${{secrets.SSH_PRIVATE_KEY}}" > ~/.ssh/staging.key
         chmod 600 ~/.ssh/staging.key
+    - name: Create SSH files 2  # Подготавливаем SSH файлы (создаём конфиг ssh)
+      run: |
         cat >>~/.ssh/config <<END
         Host Remote_Server
           HostName ${{secrets.SSH_HOST}}
@@ -22,4 +24,6 @@ jobs:
           IdentityFile ~/.ssh/staging.key
           StrictHostKeyChecking no
         END
+    - name: Copy project  # Копируем проект на удаленный сервер (публичный ключ должен быть прописан в authorized_keys на удаленном сервере)
+      run: |
         scp -r /home/runner/work/weather_telegram_bot/weather_telegram_bot Remote_Server:${{secrets.PATH_TO_PROJECT}}
