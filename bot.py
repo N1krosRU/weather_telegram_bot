@@ -10,7 +10,7 @@ BOT_API_KEY = os.getenv("BOT_API_KEY")  # Считываем ключ из пе�
 bot = telebot.TeleBot(BOT_API_KEY)
 
 
-# Обработчик команд
+# Обработчики команд
 @bot.message_handler(commands=['help'])
 def command_help(message):
     bot.send_message(message.from_user.id, 'Нажимай на кнопки под областью чата и узнай погоду в любой точки мира')
