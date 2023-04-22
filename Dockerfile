@@ -6,11 +6,11 @@
 # 2) Создать образ из Dockerfile
 # docker build -t weatherbot_image .
 
-# 3) Проверить созданный образ 
+# 3) Проверить созданный образ
 # docker images
 
-# 4) Создаём и запускаем контейнер 
-# docker run -d --rm --name weatherbot_container weatherbot_image
+# 4) Создаём и запускаем контейнер c использованием переменной окружения
+# docker run -d --rm -e BOT_API_KEY=$BOT_API_KEY --name weatherbot_container weatherbot_image
 
 # 5) Проверить созданный контейнер
 # docker ps -a
@@ -20,9 +20,6 @@
 
 # Используем образ Python версии 3.10.11
 FROM python:3.10.11-alpine
-
-# Уставливаем переменную среды (здесь должен быть ваш уникальный токен телеграмм бота)
-ENV BOT_API_KEY="${BOT_API_KEY}"
 
 # Задаём рабочую директорию и переходим в неё
 WORKDIR ./bots/weather-telegram-bot
