@@ -35,10 +35,8 @@ jobs:
         ssh Remote_Server '
         if [[ $(systemctl is-active WeatherBot) == "active" ]]; then
           systemctl stop WeatherBot
-        fi
-        &&
-        cd /etc/systemd/system
-        &&
+        fi &&
+        cd /etc/systemd/system &&
         echo "[Unit]
         Description=EasySlave
         After=network.target
