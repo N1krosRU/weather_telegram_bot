@@ -32,24 +32,29 @@ jobs:
         ssh Remote_Server "cd /etc && echo 'BOT_API_KEY=${{secrets.BOT_API_KEY}}' > environment"
     - name: Create service and run bot # Создаем сервис и запускаем приложение
       run: |
-        ssh Remote_Server 'systemctl stop WeatherBot && 
-                          cd /etc/systemd/system &&
-                          echo "[Unit]
-                          Description=EasySlave
-                          After=network.target
+        ssh Remote_Server '
+        if [[ $(systemctl is-active WeatherBot) == "active" ]]; then
+          systemctl stop WeatherBot
+        fi
+        &&
+        cd /etc/systemd/system
+        &&
+        echo "[Unit]
+        Description=EasySlave
+        After=network.target
 
-                          [Service]
-                          Environment="BOT_API_KEY=$BOT_API_KEY"
-                          Type=simple
-                          User=root
-                          ExecStart=${{secrets.PATH_TO_PROJECT}}/venv/bin/python ${{secrets.PATH_TO_PROJECT}}/bot.py
-                          KillMode=process
-                          Restart=always
-                          RestartSec=10
+        [Service]
+        Environment="BOT_API_KEY=$BOT_API_KEY"
+        Type=simple
+        User=root
+        ExecStart=${{secrets.PATH_TO_PROJECT}}/venv/bin/python ${{secrets.PATH_TO_PROJECT}}/bot.py
+        KillMode=process
+        Restart=always
+        RestartSec=10
 
-                          [Install]
-                          WantedBy=multi-user.target" > WeatherBot.service
-                          '
+        [Install]
+        WantedBy=multi-user.target" > WeatherBot.service
+        '
 
 #Устанавливаем менеджер пакетов и модуль виртуального окружения
 #apt --yes install python3-venv python3-pip
