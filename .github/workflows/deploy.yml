@@ -57,5 +57,5 @@ jobs:
         source venv/bin/activate &&
         pip install -r requirements.txt &&
         systemctl enable WeatherBot &&
-        systemctl start WeatherBot &&
+        systemctl start WeatherBot
         '
