@@ -38,7 +38,7 @@ jobs:
         fi &&
         cd /etc/systemd/system &&
         echo "[Unit]
-        Description=EasySlave
+        Description=WeatherBot
         After=network.target
 
         [Service]
@@ -51,18 +51,11 @@ jobs:
         RestartSec=10
 
         [Install]
-        WantedBy=multi-user.target" > WeatherBot.service
+        WantedBy=multi-user.target" > WeatherBot.service &&
+        cd /srv/weather_telegram_bot/ &&
+        python3 -m venv venv &&
+        source venv/bin/activate &&
+        pip install -r requirements.txt &&
+        systemctl enable WeatherBot &&
+        systemctl start WeatherBot &&
         '
-
-#Устанавливаем менеджер пакетов и модуль виртуального окружения
-#apt --yes install python3-venv python3-pip
-#
-##Создаём виртуальное окружение и устанавливаем пакеты
-#cd ${{secrets.PATH_TO_PROJECT}}
-#python3 -m venv venv
-#source venv/bin/activate
-#pip install -r requirements.txt
-#
-##Запускаем сервис
-#systemctl enable WeatherBot
-#systemctl start WeatherBot
