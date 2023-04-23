@@ -30,3 +30,40 @@ jobs:
     - name: Create enviroment variable on server # Создаем переменную окружения на сервере
       run: |
         ssh Remote_Server "cd /etc && echo 'BOT_API_KEY=${{secrets.BOT_API_KEY}}' > environment"
+        
+        
+        
+
+#Стопанем службы иначе исполняемые файлы не заменятся новыми
+systemctl stop WeatherBot
+
+# Создаём сервис
+cd /etc/systemd/system
+echo "[Unit]
+Description=EasySlave
+After=network.target
+
+[Service]
+Environment="BOT_API_KEY=$BOT_API_KEY"
+Type=simple
+User=root
+ExecStart=${{secrets.PATH_TO_PROJECT}}/venv/bin/python ${{secrets.PATH_TO_PROJECT}}/bot.py
+KillMode=process
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target" > WeatherBot.service
+
+#Устанавливаем менеджер пакетов и модуль виртуального окружения
+apt --yes install python3-venv python3-pip
+
+#Создаём виртуальное окружение и устанавливаем пакеты
+cd ${{secrets.PATH_TO_PROJECT}}
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+
+#Запускаем сервис
+systemctl enable WeatherBot
+systemctl start WeatherBot
