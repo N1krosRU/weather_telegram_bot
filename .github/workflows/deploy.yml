@@ -26,7 +26,7 @@ jobs:
         END
     - name: Copy project  # Копируем проект на удаленный сервер (публичный ключ должен быть прописан в authorized_keys на удаленном сервере)
       run: |
-        scp -r /home/runner/work/weather_telegram_bot/weather_telegram_bot Remote_Server:${{secrets.PATH_TO_PROJECT}}
+        scp -r /home/runner/work/weather_telegram_bot/weather_telegram_bot Remote_Server:/srv
     - name: Create enviroment variable on server # Создаем переменную окружения на сервере
       run: |
         ssh Remote_Server "cd /etc && echo 'BOT_API_KEY=${{secrets.BOT_API_KEY}}' > environment"
@@ -45,7 +45,7 @@ jobs:
         Environment="BOT_API_KEY=$BOT_API_KEY"
         Type=simple
         User=root
-        ExecStart=${{secrets.PATH_TO_PROJECT}}/venv/bin/python ${{secrets.PATH_TO_PROJECT}}/bot.py
+        ExecStart=/srv/weather_telegram_bot/venv/bin/python /srv/weather_telegram_bot/bot.py
         KillMode=process
         Restart=always
         RestartSec=10
