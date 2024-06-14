@@ -1,62 +1,62 @@
-name: Deployment
-on:
-  push:
-    branches:
-      - main
+# name: Deployment
+# on:
+#   push:
+#     branches:
+#       - main
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest # Используем Виртуальную машину (Ubuntu последней версии)
-    steps:
-    - name: Checkout project # Извлекаем репозиторий на виртуальную машину
-      uses: actions/checkout@v3
-    - name: Create SSH files 1  # Подготавливаем SSH файлы (создаём приватный ключ ssh)
-      run: |
-        mkdir -p ~/.ssh/
-        echo "${{secrets.SSH_PRIVATE_KEY}}" > ~/.ssh/staging.key
-        chmod 600 ~/.ssh/staging.key
-    - name: Create SSH files 2  # Подготавливаем SSH файлы (создаём конфиг ssh)
-      run: |
-        cat >>~/.ssh/config <<END
-        Host Remote_Server
-          HostName ${{secrets.SSH_HOST}}
-          User ${{secrets.SSH_USER}}
-          IdentityFile ~/.ssh/staging.key
-          StrictHostKeyChecking no
-        END
-    - name: Copy project  # Копируем проект на удаленный сервер (публичный ключ должен быть прописан в authorized_keys на удаленном сервере)
-      run: |
-        scp -r /home/runner/work/weather_telegram_bot/weather_telegram_bot Remote_Server:/srv
-    - name: Create enviroment variable on server # Создаем переменную окружения на сервере
-      run: |
-        ssh Remote_Server "cd /etc && echo 'BOT_API_KEY=${{secrets.BOT_API_KEY}}' > environment"
-    - name: Create service and run bot # Создаем сервис и запускаем приложение
-      run: |
-        ssh Remote_Server '
-        if [[ $(systemctl is-active WeatherBot) == "active" ]]; then
-          systemctl stop WeatherBot
-        fi &&
-        cd /etc/systemd/system &&
-        echo "[Unit]
-        Description=WeatherBot
-        After=network.target
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest # Используем Виртуальную машину (Ubuntu последней версии)
+#     steps:
+#     - name: Checkout project # Извлекаем репозиторий на виртуальную машину
+#       uses: actions/checkout@v3
+#     - name: Create SSH files 1  # Подготавливаем SSH файлы (создаём приватный ключ ssh)
+#       run: |
+#         mkdir -p ~/.ssh/
+#         echo "${{secrets.SSH_PRIVATE_KEY}}" > ~/.ssh/staging.key
+#         chmod 600 ~/.ssh/staging.key
+#     - name: Create SSH files 2  # Подготавливаем SSH файлы (создаём конфиг ssh)
+#       run: |
+#         cat >>~/.ssh/config <<END
+#         Host Remote_Server
+#           HostName ${{secrets.SSH_HOST}}
+#           User ${{secrets.SSH_USER}}
+#           IdentityFile ~/.ssh/staging.key
+#           StrictHostKeyChecking no
+#         END
+#     - name: Copy project  # Копируем проект на удаленный сервер (публичный ключ должен быть прописан в authorized_keys на удаленном сервере)
+#       run: |
+#         scp -r /home/runner/work/weather_telegram_bot/weather_telegram_bot Remote_Server:/srv
+#     - name: Create enviroment variable on server # Создаем переменную окружения на сервере
+#       run: |
+#         ssh Remote_Server "cd /etc && echo 'BOT_API_KEY=${{secrets.BOT_API_KEY}}' > environment"
+#     - name: Create service and run bot # Создаем сервис и запускаем приложение
+#       run: |
+#         ssh Remote_Server '
+#         if [[ $(systemctl is-active WeatherBot) == "active" ]]; then
+#           systemctl stop WeatherBot
+#         fi &&
+#         cd /etc/systemd/system &&
+#         echo "[Unit]
+#         Description=WeatherBot
+#         After=network.target
 
-        [Service]
-        Environment="BOT_API_KEY=$BOT_API_KEY"
-        Type=simple
-        User=root
-        ExecStart=/srv/weather_telegram_bot/venv/bin/python /srv/weather_telegram_bot/bot.py
-        KillMode=process
-        Restart=always
-        RestartSec=10
+#         [Service]
+#         Environment="BOT_API_KEY=$BOT_API_KEY"
+#         Type=simple
+#         User=root
+#         ExecStart=/srv/weather_telegram_bot/venv/bin/python /srv/weather_telegram_bot/bot.py
+#         KillMode=process
+#         Restart=always
+#         RestartSec=10
 
-        [Install]
-        WantedBy=multi-user.target" > WeatherBot.service &&
-        cd /srv/weather_telegram_bot/ &&
-        apt --yes install python3-venv python3-pip &&
-        python3 -m venv venv &&
-        source venv/bin/activate &&
-        pip install -r requirements.txt &&
-        systemctl enable WeatherBot &&
-        systemctl start WeatherBot
-        '
+#         [Install]
+#         WantedBy=multi-user.target" > WeatherBot.service &&
+#         cd /srv/weather_telegram_bot/ &&
+#         apt --yes install python3-venv python3-pip &&
+#         python3 -m venv venv &&
+#         source venv/bin/activate &&
+#         pip install -r requirements.txt &&
+#         systemctl enable WeatherBot &&
+#         systemctl start WeatherBot
+#         '
