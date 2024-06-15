@@ -26,7 +26,7 @@ jobs:
         END
     - name: Clone project
       run: |
-        ssh Remote_Server "cd /srv && git clone https://github.com/N1krosRU/weather_telegram_bot.git"
+        ssh Remote_Server "cd /srv && rm -r weather_telegram_bot && git clone https://github.com/N1krosRU/weather_telegram_bot.git"
     - name: Build docker image
       run: |
         ssh Remote_Server "docker build -t weatherbot_image:latest -f /srv/weather_telegram_bot/Dockerfile"
