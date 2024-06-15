@@ -24,9 +24,9 @@ jobs:
           IdentityFile ~/.ssh/srvarkey
           StrictHostKeyChecking no
         END
-    - name: Copy project  # Копируем проект на удаленный сервер (публичный ключ должен быть прописан в authorized_keys на удаленном сервере)
+    - name: Clone project
       run: |
-        scp -r /home/runner/work/weather_telegram_bot/weather_telegram_bot Remote_Server:/srv
+        ssh Remote_Server "cd /srv && git clone https://github.com/N1krosRU/weather_telegram_bot.git"
     - name: Build docker image
       run: |
         ssh Remote_Server "docker build -t weatherbot_image:latest -f /srv/weather_telegram_bot/Dockerfile"
