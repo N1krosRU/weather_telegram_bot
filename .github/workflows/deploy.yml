@@ -29,7 +29,7 @@ jobs:
         ssh Remote_Server "cd /srv && rm -r weather_telegram_bot && git clone https://github.com/N1krosRU/weather_telegram_bot.git"
     - name: Build docker image
       run: |
-        ssh Remote_Server "docker build -t weatherbot_image:latest -f /srv/weather_telegram_bot/Dockerfile"
+        ssh Remote_Server "docker build -t weatherbot_image:latest /srv/weather_telegram_bot"
     - name: Run container
       run: |
         ssh Remote_Server "docker run --restart=always -d -e BOT_API_KEY=${{secrets.BOT_API_KEY}} -e GISMETEO_TOKEN=${{secrets.GISMETEO_TOKEN}} --name weatherbot_container weatherbot_image:latest"
