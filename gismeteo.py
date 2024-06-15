@@ -1,4 +1,3 @@
-import json
 import dotenv
 import os
 import requests

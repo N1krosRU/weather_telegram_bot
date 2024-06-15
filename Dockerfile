@@ -22,7 +22,7 @@
 FROM python:3.10.11-alpine
 
 # Задаём рабочую директорию и переходим в неё
-WORKDIR ./bots/weather-telegram-bot
+WORKDIR /bot/weather-telegram-bot
 
 # Копируем requirements.txt в образ и устанавливаем зависимости
 COPY requirements.txt ./
