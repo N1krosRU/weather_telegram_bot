@@ -25,29 +25,19 @@ def command_start(message):
 @bot.message_handler(content_types=['location'])
 def location(message):
     if message.location is not None:
-        coordinates = f'{message.location.latitude},{message.location.longitude}'
+        coordinates = f'{message.location.latitude}, {message.location.longitude}'
         bot.send_message(message.from_user.id,
                          f"Ваши координаты: {coordinates}")
         bot.send_message(message.from_user.id,
                          gismeteo.get_cur_weather_by_geo(latitude=message.location.latitude, longitude=message.location.longitude))
-        # bot.send_message(message.from_user.id, weather.what_location(coordinates))
-        # bot.send_message(message.from_user.id, weather.what_weather(coordinates))
+        bot.send_message(message.from_user.id,
+                         gismeteo.get_1d_weather_by_geo(latitude=message.location.latitude, longitude=message.location.longitude))
 
 
 @bot.message_handler(content_types=["text"])
 def print_message(message):
     bot.send_message(message.from_user.id,
                      f"Привет {message.from_user.username}, отправь мне свою геопозицию и узнай погоду")
-
-# def weather_place(message):
-#     if message.text == 'Узнать погоду в конкретном месте':
-#         bot.send_message(message.from_user.id, 'Где узнать погоду?')
-#     else:
-#         user_place = message.text
-#         bot.send_message(message.from_user.id,
-#                          weather.what_location(user_place))
-#         bot.send_message(message.from_user.id,
-#                          weather.what_weather(user_place))
 
 
 bot.polling(none_stop=True, interval=0)
